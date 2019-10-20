@@ -28,10 +28,15 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             HttpServletResponse res,
             FilterChain chain) throws IOException, ServletException {
 
+        
+        System.out.println("TOKEN : " + environment.getProperty("token.secret"));        
+        
         String authorizationHeader = req.getHeader(environment.getProperty("authorization.token.header.name"));
+        
+        System.out.println("HEADER NAME : " + authorizationHeader);
 
         if (authorizationHeader == null || !authorizationHeader.startsWith(environment.getProperty("authorization.token.header.prefix"))) {
-            chain.doFilter(req, res);
+            chain.doFilter(req, res);       
             return;
         }
 
@@ -49,6 +54,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
          }
 
          String token = authorizationHeader.replace(environment.getProperty("authorization.token.header.prefix"), "");
+         
+        System.out.println("TOKEN??? : " + token);
 
          String userId = Jwts.parser()
                  .setSigningKey(environment.getProperty("token.secret"))
